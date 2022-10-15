@@ -32,3 +32,6 @@ dev-20221014:
     - Improved code to enable all features with given buttons (all cases) > No more alertVC/fatalError
 - Unit/UI Tests passed (SimpleCalcTests cover 98,9% of the Model and SimpleCalcUITests cover 96,8% of the Controller)
 - Changed iOS target from 12.2 to 11 as required
+
+dev-20221015:
+- Changed access control of Calculator class properties

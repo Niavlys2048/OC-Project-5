@@ -19,11 +19,11 @@ final class Calculator {
         return output.split(separator: " ").map { "\($0)" }
     }
     
-    var expressionHaveEnoughElement: Bool {
+    private var expressionHaveEnoughElement: Bool {
         return elements.count >= 3
     }
     
-    var canAddOperator: Bool {
+    private var canAddOperator: Bool {
         // We know for sure that output is never empty, so neither are elements
         return !operands.contains(elements.last!)
     }
