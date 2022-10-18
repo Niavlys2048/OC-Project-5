@@ -8,12 +8,12 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+final class ViewController: UIViewController {
 
     // MARK: - Outlets
 
-    @IBOutlet weak var textView: UITextView!
-    @IBOutlet var numberButtons: [UIButton]!
+    @IBOutlet private weak var textView: UITextView!
+    @IBOutlet private var numberButtons: [UIButton]!
     
     // MARK: - Properties
 
@@ -31,35 +31,35 @@ class ViewController: UIViewController {
     // MARK: - Actions
     
     // View actions
-    @IBAction func tappedNumberButton(_ sender: UIButton) {
+    @IBAction private func tappedNumberButton(_ sender: UIButton) {
         guard let numberText = sender.title(for: .normal) else {
             return
         }
         textView.text = calculator.addNumber(numberText)
     }
     
-    @IBAction func tappedAdditionButton(_ sender: UIButton) {
+    @IBAction private func tappedAdditionButton(_ sender: UIButton) {
         textView.text = calculator.add()
     }
     
-    @IBAction func tappedSubstractionButton(_ sender: UIButton) {
+    @IBAction private func tappedSubstractionButton(_ sender: UIButton) {
         textView.text = calculator.substract()
 
     }
     
-    @IBAction func tappedMultiplyButton(_ sender: UIButton) {
+    @IBAction private func tappedMultiplyButton(_ sender: UIButton) {
         textView.text = calculator.multiply()
     }
     
-    @IBAction func tappedDivideButton(_ sender: UIButton) {
+    @IBAction private func tappedDivideButton(_ sender: UIButton) {
         textView.text = calculator.divide()
     }
     
-    @IBAction func tappedAllClearButton(_ sender: UIButton) {
+    @IBAction private func tappedAllClearButton(_ sender: UIButton) {
         textView.text = calculator.allClear()
     }
     
-    @IBAction func tappedEqualButton(_ sender: UIButton) {
+    @IBAction private func tappedEqualButton(_ sender: UIButton) {
         textView.text = calculator.equal()
     }
 }

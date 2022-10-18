@@ -35,3 +35,8 @@ dev-20221014:
 
 dev-20221015:
 - Changed access control of Calculator class properties
+
+dev-20221018:
+- Replaced if by guard in func equal()
+- Changed access control of ViewController Outlets and Actions
+- Made TextView unselectable

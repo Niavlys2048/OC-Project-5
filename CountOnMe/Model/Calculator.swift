@@ -76,37 +76,40 @@ final class Calculator {
     
     func equal() -> String {
         // Apply only if there is not result already, there is enough elements and expression does not end with an operand
-        if !expressionHaveResult && expressionHaveEnoughElement && canAddOperator {
-            // Create local copy of operations
-            var operationsToReduce = elements
+        guard !expressionHaveResult && expressionHaveEnoughElement && canAddOperator else {
+            return output
+        }
+        
+        // Create local copy of operations
+        var operationsToReduce = elements
+        
+        // Iterate over operations while an operand still here
+        while operationsToReduce.count > 1 {
+            let left = Double(operationsToReduce[0])!
+            let operand = operationsToReduce[1]
+            let right = Double(operationsToReduce[2])!
             
-            // Iterate over operations while an operand still here
-            while operationsToReduce.count > 1 {
-                let left = Double(operationsToReduce[0])!
-                let operand = operationsToReduce[1]
-                let right = Double(operationsToReduce[2])!
-                
-                let result: Double
-                switch operand {
-                case "+": result = left + right
-                case "-": result = left - right
-                case "x": result = left * right
-                case "÷": result = left / right
-                default: fatalError("Unknown operator !")
-                }
-                
-                // Show integer number if decimal is 0
-                var resultStr: String = "\(result)"
-                if resultStr.hasSuffix(".0") {
-                    resultStr = String(resultStr.dropLast(2))
-                }
-                
-                operationsToReduce = Array(operationsToReduce.dropFirst(3))
-                operationsToReduce.insert(resultStr, at: 0)
+            let result: Double
+            switch operand {
+            case "+": result = left + right
+            case "-": result = left - right
+            case "x": result = left * right
+            case "÷": result = left / right
+            default: fatalError("Unknown operator !")
             }
             
-            output.append(" = \(operationsToReduce.first!)")
+            // Show integer number if decimal is 0
+            var resultStr: String = "\(result)"
+            if resultStr.hasSuffix(".0") {
+                resultStr = String(resultStr.dropLast(2))
+            }
+            
+            operationsToReduce = Array(operationsToReduce.dropFirst(3))
+            operationsToReduce.insert(resultStr, at: 0)
         }
+        
+        output.append(" = \(operationsToReduce.first!)")
+        
         return output
     }
     
