@@ -62,4 +62,8 @@ final class ViewController: UIViewController {
     @IBAction private func tappedEqualButton(_ sender: UIButton) {
         textView.text = calculator.equal()
     }
+    
+    @IBAction private func tappedSignChangeButton(_ sender: UIButton) {
+        textView.text = calculator.signChange()
+    }
 }

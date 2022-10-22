@@ -49,12 +49,16 @@ final class Calculator {
         if expressionHaveResult {
             output = ""
         }
+        
         // Avoid several zeros in a row
         if input != "0" && output == "0" {
             output = input
+        } else if output == "-0" {
+            output = "-\(input)"
         } else if (input == "0" && output != "0") || input != "0" {
             output.append(input)
         }
+        
         return output
     }
     
@@ -72,6 +76,30 @@ final class Calculator {
     
     func divide() -> String {
         addOperator(" ÷ ")
+    }
+    
+    func signChange() -> String {
+        var result = elements.last!
+        
+        // if sign negative
+        if expressionHaveResult {
+            if result.contains("-") {
+                output = String(result.dropFirst())
+            } else {
+                output = "-\(result)"
+            }
+        } else if canAddOperator {
+            output.removeLast(result.count)
+            if result.contains("-") {
+                output.append(String(result.dropFirst()))
+            } else {
+                output.append("-\(result)")
+            }
+        } else if !canAddOperator {
+            output.append("-")
+        }
+        
+        return output
     }
     
     func equal() -> String {

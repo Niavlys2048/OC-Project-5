@@ -196,6 +196,7 @@ class SimpleCalcTests: XCTestCase {
         XCTAssertEqual(result2, "5 - ")
     }
     
+    // Adding 0 to existing number
     func testGivenResultIs5_WhenAdding0_ThenResultIs50() {
         // Given
         let num1 = calc.addNumber("5")
@@ -206,5 +207,101 @@ class SimpleCalcTests: XCTestCase {
         // Then
         XCTAssertEqual(num1, "5")
         XCTAssertEqual(num2, "50")
+    }
+    
+    // Change of sign: take the positive number of the result and make it negative
+    func testGivenResultIs5_WhenUsingSignChangeButton_ThenResultIsMinus5() {
+        // Given
+        let num1 = calc.addNumber("3")
+        let operand = calc.add()
+        let num2 = calc.addNumber("2")
+        let result1 = calc.equal()
+        
+        // When
+        let result2 = calc.signChange()
+        
+        // Then
+        XCTAssertEqual(num1, "3")
+        XCTAssertEqual(operand, "3 + ")
+        XCTAssertEqual(num2, "3 + 2")
+        XCTAssertEqual(result1, "3 + 2 = 5")
+        XCTAssertEqual(result2, "-5")
+    }
+    
+    // Change of sign: take the negative number of the result and make it positive
+    func testGivenResultIsMinus2_WhenUsingSignChangeButton_ThenResultIsMinus5() {
+        // Given
+        let num1 = calc.addNumber("6")
+        let operand = calc.substract()
+        let num2 = calc.addNumber("8")
+        let result1 = calc.equal()
+        
+        // When
+        let result2 = calc.signChange()
+        
+        // Then
+        XCTAssertEqual(num1, "6")
+        XCTAssertEqual(operand, "6 - ")
+        XCTAssertEqual(num2, "6 - 8")
+        XCTAssertEqual(result1, "6 - 8 = -2")
+        XCTAssertEqual(result2, "2")
+    }
+    
+    // Change of sign: add negative sign, then a number, right after an operand
+    func testGivenBeginOfOperation_WhenUsingSignChangeButtonAndNumber_ThenResultIsOperationPlusNegativeNumber() {
+        // Given
+        let num1 = calc.addNumber("6")
+        let operand1 = calc.multiply()
+        
+        // When
+        let operand2 = calc.signChange()
+        let num2 = calc.addNumber("8")
+        
+        // Then
+        XCTAssertEqual(num1, "6")
+        XCTAssertEqual(operand1, "6 x ")
+        XCTAssertEqual(operand2, "6 x -")
+        XCTAssertEqual(num2, "6 x -8")
+    }
+    
+    // Change of sign: add a number, then negative sign, right after an operand
+    func testGivenBeginOfOperation_WhenAddingNumberAndUsingSignChangeButton_ThenResultIsOperationPlusNegativeNumber() {
+        // Given
+        let num1 = calc.addNumber("6")
+        let operand1 = calc.multiply()
+        
+        // When
+        let num2 = calc.addNumber("8")
+        let operand2 = calc.signChange()
+        
+        // Then
+        XCTAssertEqual(num1, "6")
+        XCTAssertEqual(operand1, "6 x ")
+        XCTAssertEqual(num2, "6 x 8")
+        XCTAssertEqual(operand2, "6 x -8")
+    }
+    
+    // Change of sign: add negative to 0
+    func testGiven0_WhenUsingSignChangeButton_ThenResultIsMinusZero() {
+        // Given
+                
+        // When
+        let operand = calc.signChange()
+        
+        // Then
+        XCTAssertEqual(operand, "-0")
+    }
+    
+    // Change of sign: add negative to 0
+    func testGivenMinus0_WhenAdding5_ThenResultIsMinus5() {
+        // Given
+        let operand1 = calc.signChange()
+                
+        // When
+        let operand2 = calc.addNumber("5")
+        
+        // Then
+        XCTAssertEqual(operand1, "-0")
+        XCTAssertEqual(operand2, "-5")
     }
 }

@@ -40,3 +40,10 @@ dev-20221018:
 - Replaced if by guard in func equal()
 - Changed access control of ViewController Outlets and Actions
 - Made TextView unselectable
+
+dev-20221022:
+- Sign button displayed and enabled (Enabled=true, Alpha=1, User Interaction Enabled)
+- Replaced sign button text from "±" to "+/-" for better visibility and changed font size to accommodate new text
+- Added signChange functionality (same behavior as the official Apple calculator) through TDD:
+    - Added IBAction for the sign-change button
+    - Created signChange() function and changed addNumber() function in Calculator
