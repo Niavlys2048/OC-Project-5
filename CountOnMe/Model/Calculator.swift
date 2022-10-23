@@ -114,6 +114,17 @@ final class Calculator {
         return output
     }
     
+    func addDecimalSeparator() -> String {
+        if expressionHaveResult {
+            output = "0."
+        } else if !canAddOperator {
+            output.append("0.")
+        } else if !elements.last!.contains(".") {
+            output.append(".")
+        }
+        return output
+    }
+    
     private func formatWholeNumber(_ number: Double) -> String {
         // Return integer number if decimal is 0
         var resultStr: String = "\(number)"

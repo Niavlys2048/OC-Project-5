@@ -66,4 +66,8 @@ final class ViewController: UIViewController {
     @IBAction private func tappedSignChangeButton(_ sender: UIButton) {
         textView.text = calculator.signChange()
     }
+    
+    @IBAction func tappedDecimalSeparatorButton(_ sender: UIButton) {
+        textView.text = calculator.addDecimalSeparator()
+    }
 }

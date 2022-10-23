@@ -392,4 +392,86 @@ class SimpleCalcTests: XCTestCase {
         XCTAssertEqual(result1, "6 ÷ 0 = Error")
         XCTAssertEqual(result2, "-0")
     }
+    
+    // Decimal Separator: after a number
+    func testGiven6Plus12Point3_WhenEqual_ThenResultIs18Point3() {
+        // Given
+        let num1 = calc.addNumber("6")
+        let operand = calc.add()
+        let num2 = calc.addNumber("1")
+        let num3 = calc.addNumber("2")
+        let separator = calc.addDecimalSeparator()
+        let num4 = calc.addNumber("3")
+        
+        // When
+        let result = calc.equal()
+        
+        // Then
+        XCTAssertEqual(num1, "6")
+        XCTAssertEqual(operand, "6 + ")
+        XCTAssertEqual(num2, "6 + 1")
+        XCTAssertEqual(num3, "6 + 12")
+        XCTAssertEqual(separator, "6 + 12.")
+        XCTAssertEqual(num4, "6 + 12.3")
+        XCTAssertEqual(result, "6 + 12.3 = 18.3")
+    }
+    
+    // Decimal Separator: after an operand
+    func testGiven6PlusPoint3_WhenEqual_ThenResultIs6Point3() {
+        // Given
+        let num1 = calc.addNumber("6")
+        let operand = calc.add()
+        let separator = calc.addDecimalSeparator()
+        let num2 = calc.addNumber("3")
+        
+        // When
+        let result = calc.equal()
+        
+        // Then
+        XCTAssertEqual(num1, "6")
+        XCTAssertEqual(operand, "6 + ")
+        XCTAssertEqual(separator, "6 + 0.")
+        XCTAssertEqual(num2, "6 + 0.3")
+        XCTAssertEqual(result, "6 + 0.3 = 6.3")
+    }
+    
+    // Decimal Separator: after a result
+    func testGivenResult_WhenPoint_ThenResultIs0Point() {
+        // Given
+        let num1 = calc.addNumber("6")
+        let operand = calc.add()
+        let num2 = calc.addNumber("3")
+        let result = calc.equal()
+        
+        // When
+        let separator = calc.addDecimalSeparator()
+        
+        // Then
+        XCTAssertEqual(num1, "6")
+        XCTAssertEqual(operand, "6 + ")
+        XCTAssertEqual(num2, "6 + 3")
+        XCTAssertEqual(result, "6 + 3 = 9")
+        XCTAssertEqual(separator, "0.")
+    }
+    
+    // Decimal Separator: after a number which already has a separator
+    func testGivenNumberWithSeparator_WhenPoint_ThenResultIsSame() {
+        // Given
+        let num1 = calc.addNumber("6")
+        let operand = calc.add()
+        let num2 = calc.addNumber("8")
+        let separator1 = calc.addDecimalSeparator()
+        let num3 = calc.addNumber("5")
+        
+        // When
+        let separator2 = calc.addDecimalSeparator()
+        
+        // Then
+        XCTAssertEqual(num1, "6")
+        XCTAssertEqual(operand, "6 + ")
+        XCTAssertEqual(num2, "6 + 8")
+        XCTAssertEqual(separator1, "6 + 8.")
+        XCTAssertEqual(num3, "6 + 8.5")
+        XCTAssertEqual(separator2, "6 + 8.5")
+    }
 }

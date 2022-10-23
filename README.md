@@ -59,3 +59,9 @@ dev-20221023-15-15:
     - Created a computed property errorDivisionByZero
     - Changed addOperator() and signChange() functions to handle division by zero
     - Unit Tests for division by zero
+
+dev-20221023-16-10:
+- decimal-separator button displayed and enabled (Enabled=true, Alpha=1, User Interaction Enabled)
+- Added decimal-separator functionality (same behavior as the official Apple calculator) through TDD:
+    - Added IBAction for decimal-separator button
+    - Create addDecimalSeparator() function in Calculator
