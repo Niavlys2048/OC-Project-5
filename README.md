@@ -47,3 +47,15 @@ dev-20221022:
 - Added signChange functionality (same behavior as the official Apple calculator) through TDD:
     - Added IBAction for the sign-change button
     - Created signChange() function and changed addNumber() function in Calculator
+
+dev-20221023-15-15:
+- Minor fix in signChange() function
+- Support for operand priority (multiplication and division must take priority over addition and subtraction) through TDD:
+    - Created computePriorityOperations()
+    - Refactoring of the equal() function
+    - Created formatWholeNumber() function for code reuse
+- Result of a division by zero modified to be equal to "Error" as on the official Apple calculator, through TDD:
+    - Changed equal() function to format error on division by zero
+    - Created a computed property errorDivisionByZero
+    - Changed addOperator() and signChange() functions to handle division by zero
+    - Unit Tests for division by zero

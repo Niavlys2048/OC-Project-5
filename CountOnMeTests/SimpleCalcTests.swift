@@ -298,10 +298,98 @@ class SimpleCalcTests: XCTestCase {
         let operand1 = calc.signChange()
                 
         // When
-        let operand2 = calc.addNumber("5")
+        let num1 = calc.addNumber("5")
         
         // Then
         XCTAssertEqual(operand1, "-0")
-        XCTAssertEqual(operand2, "-5")
+        XCTAssertEqual(num1, "-5")
+    }
+    
+    // Check priority operations
+    func testGivenOperation_WhenPriorityOperands_ThenResultIs28() {
+        // Given
+        let num1 = calc.addNumber("5")
+        let operand1 = calc.add()
+        let num2 = calc.addNumber("6")
+        let operand2 = calc.multiply()
+        let num3 = calc.addNumber("3")
+        let operand3 = calc.substract()
+        let num4 = calc.addNumber("4")
+        let operand4 = calc.divide()
+        let num5 = calc.addNumber("2")
+        let operand5 = calc.add()
+        let num6 = calc.addNumber("7")
+                
+        // When
+        let result = calc.equal()
+        
+        // Then
+        XCTAssertEqual(num1, "5")
+        XCTAssertEqual(operand1, "5 + ")
+        XCTAssertEqual(num2, "5 + 6")
+        XCTAssertEqual(operand2, "5 + 6 x ")
+        XCTAssertEqual(num3, "5 + 6 x 3")
+        XCTAssertEqual(operand3, "5 + 6 x 3 - ")
+        XCTAssertEqual(num4, "5 + 6 x 3 - 4")
+        XCTAssertEqual(operand4, "5 + 6 x 3 - 4 ÷ ")
+        XCTAssertEqual(num5, "5 + 6 x 3 - 4 ÷ 2")
+        XCTAssertEqual(operand5, "5 + 6 x 3 - 4 ÷ 2 + ")
+        XCTAssertEqual(num6, "5 + 6 x 3 - 4 ÷ 2 + 7")
+        XCTAssertEqual(result, "5 + 6 x 3 - 4 ÷ 2 + 7 = 28")
+    }
+    
+    // Division by zero: result after equal
+    func testGiven6DividedByZero_WhenEqual_ThenResultIsError() {
+        // Given
+        let num1 = calc.addNumber("6")
+        let operand = calc.divide()
+        let num2 = calc.addNumber("0")
+                
+        // When
+        let result = calc.equal()
+        
+        // Then
+        XCTAssertEqual(num1, "6")
+        XCTAssertEqual(operand, "6 ÷ ")
+        XCTAssertEqual(num2, "6 ÷ 0")
+        XCTAssertEqual(result, "6 ÷ 0 = Error")
+    }
+    
+    // Division by zero: result after new operand
+    func testGiven6DividedByZero_WhenAddingOperand_ThenResultIsTheSame() {
+        // Given
+        let num1 = calc.addNumber("6")
+        let operand = calc.divide()
+        let num2 = calc.addNumber("0")
+        let result1 = calc.equal()
+                
+        // When
+        let result2 = calc.add()
+        
+        // Then
+        XCTAssertEqual(num1, "6")
+        XCTAssertEqual(operand, "6 ÷ ")
+        XCTAssertEqual(num2, "6 ÷ 0")
+        XCTAssertEqual(result1, "6 ÷ 0 = Error")
+        XCTAssertEqual(result2, "6 ÷ 0 = Error")
+    }
+    
+    // Division by zero: result after sign-change
+    func testGiven6DividedByZero_WhenAddingSignChange_ThenResultIsMinusZero() {
+        // Given
+        let num1 = calc.addNumber("6")
+        let operand = calc.divide()
+        let num2 = calc.addNumber("0")
+        let result1 = calc.equal()
+                
+        // When
+        let result2 = calc.signChange()
+        
+        // Then
+        XCTAssertEqual(num1, "6")
+        XCTAssertEqual(operand, "6 ÷ ")
+        XCTAssertEqual(num2, "6 ÷ 0")
+        XCTAssertEqual(result1, "6 ÷ 0 = Error")
+        XCTAssertEqual(result2, "-0")
     }
 }

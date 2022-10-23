@@ -32,10 +32,18 @@ final class Calculator {
         return output.firstIndex(of: "=") != nil
     }
     
+    private var errorDivisionByZero: Bool {
+        return elements.last == "Error"
+    }
+    
     // MARK: - Methods
     
     // Allow operand change during operation and new operation with previous result
     private func addOperator(_ operand: String) -> String {
+        guard !errorDivisionByZero else {
+            return output
+        }
+        
         if !canAddOperator {
             output.removeLast(3)
         } else if expressionHaveResult {
@@ -78,15 +86,19 @@ final class Calculator {
         addOperator(" ÷ ")
     }
     
-    func signChange() -> String {
-        var result = elements.last!
+    func signChange() -> String {        
+        let result = elements.last!
         
         // if sign negative
         if expressionHaveResult {
             if result.contains("-") {
                 output = String(result.dropFirst())
             } else {
-                output = "-\(result)"
+                if errorDivisionByZero {
+                    output = "-0"
+                } else {
+                    output = "-\(result)"
+                }
             }
         } else if canAddOperator {
             output.removeLast(result.count)
@@ -102,14 +114,65 @@ final class Calculator {
         return output
     }
     
-    func equal() -> String {
+    private func formatWholeNumber(_ number: Double) -> String {
+        // Return integer number if decimal is 0
+        var resultStr: String = "\(number)"
+        if resultStr.hasSuffix(".0") {
+            resultStr = String(resultStr.dropLast(2))
+        }
+        return resultStr
+    }
+    
+    private func computePriorityOperations() -> [String]? {
+        
+        // Create local copy of operations
+        var operationsToReduce = elements
+        
+        // Iterate over operations while a multiply or divide operand is still there
+        while operationsToReduce.contains("x") || operationsToReduce.contains("÷") {
+            // Get index of operand
+            guard let index = operationsToReduce.firstIndex(where: { $0 == "x" || $0 == "÷" }) else {
+                return nil
+            }
+            
+            let left = Double(operationsToReduce[index-1])!
+            let operand = operationsToReduce[index]
+            let right = Double(operationsToReduce[index+1])!
+            
+            let result: Double
+            switch operand {
+            case "x": result = left * right
+            case "÷": result = left / right
+            default: return nil
+            }
+            
+            // Delete previously calculated operation (left, operand and right elements)
+            for _ in 1...3 {
+                operationsToReduce.remove(at: index-1)
+            }
+            
+            // Show integer number if decimal is 0
+            let resultStr = formatWholeNumber(result)
+            
+            // Insert the result of the previously calculated operation
+            operationsToReduce.insert(resultStr, at: index-1)
+        }
+        return operationsToReduce
+    }
+    
+    func equal() -> String? {
         // Apply only if there is not result already, there is enough elements and expression does not end with an operand
         guard !expressionHaveResult && expressionHaveEnoughElement && canAddOperator else {
             return output
         }
         
-        // Create local copy of operations
-        var operationsToReduce = elements
+        // Compute priority operations first
+        guard let operation = computePriorityOperations() else {
+            return nil
+        }
+        
+        // Create a local copy of operations (after computing the priority operation)
+        var operationsToReduce = operation
         
         // Iterate over operations while an operand still here
         while operationsToReduce.count > 1 {
@@ -121,22 +184,22 @@ final class Calculator {
             switch operand {
             case "+": result = left + right
             case "-": result = left - right
-            case "x": result = left * right
-            case "÷": result = left / right
-            default: fatalError("Unknown operator !")
+            default: return nil
             }
             
             // Show integer number if decimal is 0
-            var resultStr: String = "\(result)"
-            if resultStr.hasSuffix(".0") {
-                resultStr = String(resultStr.dropLast(2))
-            }
+            let resultStr = formatWholeNumber(result)
             
             operationsToReduce = Array(operationsToReduce.dropFirst(3))
             operationsToReduce.insert(resultStr, at: 0)
         }
         
-        output.append(" = \(operationsToReduce.first!)")
+        let operationToReduceStr = "\(operationsToReduce.first!)"
+        if operationToReduceStr.contains("inf") {
+            output.append(" = Error")
+        } else {
+            output.append(" = \(operationToReduceStr)")
+        }
         
         return output
     }
