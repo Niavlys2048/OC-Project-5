@@ -152,16 +152,24 @@ final class Calculator {
         let left = Double(leftStr)!
         
         if left.hasDecimal && !right.hasDecimal && Int(right).isMultiple(of: 10) {
-            // Get number of decimal digits of left number
-            let decimalDigits = leftStr.split(separator: ".")[1]
-            let decimalDigitsNumber = decimalDigits.count
-            
             // Get number of digits of right number -1 (ex: 100 will return 2), representing movement of the decimal separator
             let rightStr = String(Int(right))
-            let gap = rightStr.dropFirst().count
+            let numberOfDigits = rightStr.count
+            let gap = numberOfDigits - 1
+            
+            // First, divide by righNumberOne (ex: if right number is 900, divide by 9 first to keep precision)
+            let rightNumberOne = Double(rightStr.prefix(1))! // (in our example, rightNumberOne = 9)
+            let firstOperation = left / rightNumberOne // (in our example, firstOperation = left / 9)
+            
+            // Get number of decimal digits of firstOperation result
+            let decimalDigits = String(firstOperation).split(separator: ".")[1]
+            let decimalDigitsNumber = decimalDigits.count
+            
+            // Second, divide by numberTwo (ex: if right number is 900, divide by 100 after first division)
+            let rightNumberTwo = right / rightNumberOne // (in our example, rightNumberTwo = 100)
             
             // Correction of mistake for some divisions (ex: 5.6 / 100 = 0.05599... by default, become 0.056 as expected)
-            return (left / right).roundToDecimal(decimalDigitsNumber + gap)
+            return (firstOperation / rightNumberTwo).roundToDecimal(decimalDigitsNumber + gap)
         } else {
             return left / right
         }

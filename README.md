@@ -87,3 +87,7 @@ dev-20221024-14-55:
 
 dev-20221024-15-09:
 - Minor fix in SimpleCalcTests class (by adding // swiftlint:disable type_body_length) to avoid unnecessary warnings
+
+dev-20221024-18-58:
+- Debugged computeDivision() function, to keep precise results in case of multiple of 10 starting with a number other than 1 (example: 200, ..., 900)
+- Added a Unit Test to validate changes and check if there is no regression
