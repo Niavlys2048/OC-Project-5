@@ -70,4 +70,8 @@ final class ViewController: UIViewController {
     @IBAction func tappedDecimalSeparatorButton(_ sender: UIButton) {
         textView.text = calculator.addDecimalSeparator()
     }
+    
+    @IBAction func tappedPercentButton(_ sender: UIButton) {
+        textView.text = calculator.getPercent()
+    }
 }

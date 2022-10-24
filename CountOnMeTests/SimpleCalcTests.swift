@@ -393,6 +393,25 @@ class SimpleCalcTests: XCTestCase {
         XCTAssertEqual(result2, "-0")
     }
     
+    // Division by zero: result after percent
+    func testGiven6DividedByZero_WhenAddingPercent_ThenResultIsSame() {
+        // Given
+        let num1 = calc.addNumber("6")
+        let operand = calc.divide()
+        let num2 = calc.addNumber("0")
+        let result1 = calc.equal()
+                
+        // When
+        let result2 = calc.getPercent()
+        
+        // Then
+        XCTAssertEqual(num1, "6")
+        XCTAssertEqual(operand, "6 ÷ ")
+        XCTAssertEqual(num2, "6 ÷ 0")
+        XCTAssertEqual(result1, "6 ÷ 0 = Error")
+        XCTAssertEqual(result2, "6 ÷ 0 = Error")
+    }
+    
     // Decimal Separator: after a number
     func testGiven6Plus12Point3_WhenEqual_ThenResultIs18Point3() {
         // Given
@@ -473,5 +492,39 @@ class SimpleCalcTests: XCTestCase {
         XCTAssertEqual(separator1, "6 + 8.")
         XCTAssertEqual(num3, "6 + 8.5")
         XCTAssertEqual(separator2, "6 + 8.5")
+    }
+    
+    // Percent: after a whole number
+    func testGivenWholeNumber_WhenPercent_ThenResultIsCorrect() {
+        // Given
+        let num1 = calc.addNumber("6")
+        let num2 = calc.addNumber("5")
+        let num3 = calc.addNumber("9")
+        
+        // When
+        let percent = calc.getPercent()
+        
+        // Then
+        XCTAssertEqual(num1, "6")
+        XCTAssertEqual(num2, "65")
+        XCTAssertEqual(num3, "659")
+        XCTAssertEqual(percent, "6.59")
+    }
+    
+    // Percent: specific case with 5.6
+    func testGivenNumber5point6_WhenPercent_ThenResultIsCorrect() {
+        // Given
+        let num1 = calc.addNumber("5")
+        let separator = calc.addDecimalSeparator()
+        let num2 = calc.addNumber("6")
+        
+        // When
+        let percent = calc.getPercent()
+        
+        // Then
+        XCTAssertEqual(num1, "5")
+        XCTAssertEqual(separator, "5.")
+        XCTAssertEqual(num2, "5.6")
+        XCTAssertEqual(percent, "0.056")
     }
 }

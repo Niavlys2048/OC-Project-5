@@ -65,3 +65,13 @@ dev-20221023-16-10:
 - Added decimal-separator functionality (same behavior as the official Apple calculator) through TDD:
     - Added IBAction for decimal-separator button
     - Create addDecimalSeparator() function in Calculator
+
+dev-20221024-13-00:
+- Created percent button and design improvement
+- Added percent functionality (same behavior as the official Apple calculator) through TDD:
+    - Added IBAction for percent button
+    - Create getPercent() function in Calculator
+- Created an extension for the Double type, for the needs related to the division and the maximum fraction digits (after decimal separator)
+- Created a computeDivision() function to handle rare cases of wrong result when a Double is divided by 100 (or any multiple of 10)
+- formatWholeNumber() and computePriorityOperations() functions refactoring
+- Minor fix in equal() function

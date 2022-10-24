@@ -114,6 +114,26 @@ final class Calculator {
         return output
     }
     
+    func getPercent() -> String {
+        let result = elements.last!
+        var percent: Double
+        
+        guard result != "0" && result != "0." && !errorDivisionByZero else {
+            return output
+        }
+        
+        if expressionHaveResult {
+            percent = computeDivision(leftStr: result, right: 100)
+            output = "\(percent)"
+        } else if canAddOperator {
+            percent = computeDivision(leftStr: result, right: 100)
+            output.removeLast(result.count)
+            output.append("\(percent)")
+        }
+        
+        return output
+    }
+    
     func addDecimalSeparator() -> String {
         if expressionHaveResult {
             output = "0."
@@ -125,17 +145,38 @@ final class Calculator {
         return output
     }
     
-    private func formatWholeNumber(_ number: Double) -> String {
+    private func computeDivision(leftStr: String, right: Double) -> Double {
+        // Specific case with division by number which are multiple of 10 (100, 200, 1000, etc.)
+        // In some rare cases, the result of a Double divided by 100 (or any multiple of 10) is incorrect (ex: 5.6 / 100 = 0.05599... by default)
+        
+        let left = Double(leftStr)!
+        
+        if left.hasDecimal && !right.hasDecimal && Int(right).isMultiple(of: 10) {
+            // Get number of decimal digits of left number
+            let decimalDigits = leftStr.split(separator: ".")[1]
+            let decimalDigitsNumber = decimalDigits.count
+            
+            // Get number of digits of right number -1 (ex: 100 will return 2), representing movement of the decimal separator
+            let rightStr = String(Int(right))
+            print(rightStr)
+            let gap = rightStr.dropFirst().count
+            
+            // Correction of mistake for some divisions (ex: 5.6 / 100 = 0.05599... by default, become 0.056 as expected)
+            return (left / right).roundToDecimal(decimalDigitsNumber + gap)
+        } else {
+            return left / right
+        }
+    }
+    
+    private func formatWholeNumber(_ resultStr: String) -> String {
         // Return integer number if decimal is 0
-        var resultStr: String = "\(number)"
         if resultStr.hasSuffix(".0") {
-            resultStr = String(resultStr.dropLast(2))
+            return String(resultStr.dropLast(2))
         }
         return resultStr
     }
     
     private func computePriorityOperations() -> [String]? {
-        
         // Create local copy of operations
         var operationsToReduce = elements
         
@@ -146,14 +187,15 @@ final class Calculator {
                 return nil
             }
             
-            let left = Double(operationsToReduce[index-1])!
+            let leftStr = operationsToReduce[index-1]
+            let left = Double(leftStr)!
             let operand = operationsToReduce[index]
             let right = Double(operationsToReduce[index+1])!
             
             let result: Double
             switch operand {
             case "x": result = left * right
-            case "÷": result = left / right
+            case "÷": result = computeDivision(leftStr: leftStr, right: right)
             default: return nil
             }
             
@@ -162,8 +204,11 @@ final class Calculator {
                 operationsToReduce.remove(at: index-1)
             }
             
+            // Limit maximum fraction digits
+            var resultStr: String = result.displayFormatted
+            
             // Show integer number if decimal is 0
-            let resultStr = formatWholeNumber(result)
+            resultStr = formatWholeNumber(resultStr)
             
             // Insert the result of the previously calculated operation
             operationsToReduce.insert(resultStr, at: index-1)
@@ -198,15 +243,18 @@ final class Calculator {
             default: return nil
             }
             
+            // Limit maximum fraction digits
+            var resultStr: String = result.displayFormatted
+            
             // Show integer number if decimal is 0
-            let resultStr = formatWholeNumber(result)
+            resultStr = formatWholeNumber(resultStr)
             
             operationsToReduce = Array(operationsToReduce.dropFirst(3))
             operationsToReduce.insert(resultStr, at: 0)
         }
         
         let operationToReduceStr = "\(operationsToReduce.first!)"
-        if operationToReduceStr.contains("inf") {
+        if operationToReduceStr.contains("inf") || operationToReduceStr.contains("∞") {
             output.append(" = Error")
         } else {
             output.append(" = \(operationToReduceStr)")
@@ -218,5 +266,23 @@ final class Calculator {
     func allClear() -> String {
         output = "0"
         return output
+    }
+}
+
+// https://stackoverflow.com/questions/27338573/rounding-a-double-value-to-x-number-of-decimal-places-in-swift
+// https://stackoverflow.com/questions/24051314/precision-string-format-specifier-in-swift
+extension Double {
+    var displayFormatted: String {
+        let numberFormatter = NumberFormatter()
+        numberFormatter.maximumFractionDigits = 8
+        return numberFormatter.string(for: self) ?? String(self)
+    }
+    var hasDecimal: Bool {
+        return self.truncatingRemainder(dividingBy: 1) != 0
+    }
+    
+    func roundToDecimal(_ fractionDigits: Int) -> Double {
+        let multiplier = pow(10, Double(fractionDigits))
+        return Darwin.round(self * multiplier) / multiplier
     }
 }
