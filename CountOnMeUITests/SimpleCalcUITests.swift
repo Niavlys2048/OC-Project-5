@@ -85,7 +85,7 @@ class SimpleCalcUITests: XCTestCase {
         
         // Then
         if let textViewValue = textView.value as? String {
-            XCTAssertEqual(textViewValue, "1234567 - 89 x 2 ÷ 20 = 123447.8")
+            XCTAssertEqual(textViewValue, "1234567 - 89 x 2 ÷ 20 = 1234558.1")
         }
         
         // -------------------- Test 7 -------------------

@@ -75,3 +75,12 @@ dev-20221024-13-00:
 - Created a computeDivision() function to handle rare cases of wrong result when a Double is divided by 100 (or any multiple of 10)
 - formatWholeNumber() and computePriorityOperations() functions refactoring
 - Minor fix in equal() function
+
+
+dev-20221024-14-55:
+- Minor change in computePriorityOperations() and equal() functions
+- Changed the access control of newly created IBActions
+- Created a separate Double+Extension.swift file in a new folder named Helpers to handle the Double type extension
+- Fixed test 6 result in SimpleCalcUITests
+- Created a last Unit test for percent
+- Included .swiftlint.yml file in git

@@ -511,6 +511,25 @@ class SimpleCalcTests: XCTestCase {
         XCTAssertEqual(percent, "6.59")
     }
     
+    // Percent: afer a result
+    func testGivenResult_WhenPercent_ThenResultIsPercentOfResult() {
+        // Given
+        let num1 = calc.addNumber("5")
+        let operand = calc.add()
+        let num2 = calc.addNumber("6")
+        let result = calc.equal()
+        
+        // When
+        let percent = calc.getPercent()
+        
+        // Then
+        XCTAssertEqual(num1, "5")
+        XCTAssertEqual(operand, "5 + ")
+        XCTAssertEqual(num2, "5 + 6")
+        XCTAssertEqual(result, "5 + 6 = 11")
+        XCTAssertEqual(percent, "0.11")
+    }
+    
     // Percent: specific case with 5.6
     func testGivenNumber5point6_WhenPercent_ThenResultIsCorrect() {
         // Given

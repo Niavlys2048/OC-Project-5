@@ -158,7 +158,6 @@ final class Calculator {
             
             // Get number of digits of right number -1 (ex: 100 will return 2), representing movement of the decimal separator
             let rightStr = String(Int(right))
-            print(rightStr)
             let gap = rightStr.dropFirst().count
             
             // Correction of mistake for some divisions (ex: 5.6 / 100 = 0.05599... by default, become 0.056 as expected)
@@ -176,7 +175,7 @@ final class Calculator {
         return resultStr
     }
     
-    private func computePriorityOperations() -> [String]? {
+    private func computePriorityOperations() -> [String] {
         // Create local copy of operations
         var operationsToReduce = elements
         
@@ -184,7 +183,7 @@ final class Calculator {
         while operationsToReduce.contains("x") || operationsToReduce.contains("÷") {
             // Get index of operand
             guard let index = operationsToReduce.firstIndex(where: { $0 == "x" || $0 == "÷" }) else {
-                return nil
+                return operationsToReduce
             }
             
             let leftStr = operationsToReduce[index-1]
@@ -196,7 +195,7 @@ final class Calculator {
             switch operand {
             case "x": result = left * right
             case "÷": result = computeDivision(leftStr: leftStr, right: right)
-            default: return nil
+            default: return operationsToReduce
             }
             
             // Delete previously calculated operation (left, operand and right elements)
@@ -216,16 +215,14 @@ final class Calculator {
         return operationsToReduce
     }
     
-    func equal() -> String? {
+    func equal() -> String {
         // Apply only if there is not result already, there is enough elements and expression does not end with an operand
         guard !expressionHaveResult && expressionHaveEnoughElement && canAddOperator else {
             return output
         }
         
         // Compute priority operations first
-        guard let operation = computePriorityOperations() else {
-            return nil
-        }
+        let operation = computePriorityOperations()
         
         // Create a local copy of operations (after computing the priority operation)
         var operationsToReduce = operation
@@ -240,7 +237,7 @@ final class Calculator {
             switch operand {
             case "+": result = left + right
             case "-": result = left - right
-            default: return nil
+            default: return output
             }
             
             // Limit maximum fraction digits
@@ -266,23 +263,5 @@ final class Calculator {
     func allClear() -> String {
         output = "0"
         return output
-    }
-}
-
-// https://stackoverflow.com/questions/27338573/rounding-a-double-value-to-x-number-of-decimal-places-in-swift
-// https://stackoverflow.com/questions/24051314/precision-string-format-specifier-in-swift
-extension Double {
-    var displayFormatted: String {
-        let numberFormatter = NumberFormatter()
-        numberFormatter.maximumFractionDigits = 8
-        return numberFormatter.string(for: self) ?? String(self)
-    }
-    var hasDecimal: Bool {
-        return self.truncatingRemainder(dividingBy: 1) != 0
-    }
-    
-    func roundToDecimal(_ fractionDigits: Int) -> Double {
-        let multiplier = pow(10, Double(fractionDigits))
-        return Darwin.round(self * multiplier) / multiplier
     }
 }
