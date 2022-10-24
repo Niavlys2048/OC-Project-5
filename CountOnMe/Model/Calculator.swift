@@ -158,7 +158,7 @@ final class Calculator {
             let gap = numberOfDigits - 1
             
             // First, divide by righNumberOne (ex: if right number is 900, divide by 9 first to keep precision)
-            let rightNumberOne = Double(rightStr.prefix(1))! // (in our example, rightNumberOne = 9)
+            let rightNumberOne = Double(rightStr.replacingOccurrences(of: "0", with: ""))! // (in our example, rightNumberOne = 9)
             let firstOperation = left / rightNumberOne // (in our example, firstOperation = left / 9)
             
             // Get number of decimal digits of firstOperation result

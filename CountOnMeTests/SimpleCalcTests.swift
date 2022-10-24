@@ -572,4 +572,29 @@ class SimpleCalcTests: XCTestCase {
         XCTAssertEqual(num5, "5.6 ÷ 900")
         XCTAssertEqual(result, "5.6 ÷ 900 = 0.00622222")
     }
+    
+    // Division: specific case with 5.6 divided by 650
+    func testGivenNumber5point6_WhenDividedBy650_ThenResultIsCorrect() {
+        // Given
+        let num1 = calc.addNumber("5")
+        let separator = calc.addDecimalSeparator()
+        let num2 = calc.addNumber("6")
+        
+        // When
+        let operand = calc.divide()
+        let num3 = calc.addNumber("6")
+        let num4 = calc.addNumber("5")
+        let num5 = calc.addNumber("0")
+        let result = calc.equal()
+        
+        // Then
+        XCTAssertEqual(num1, "5")
+        XCTAssertEqual(separator, "5.")
+        XCTAssertEqual(num2, "5.6")
+        XCTAssertEqual(operand, "5.6 ÷ ")
+        XCTAssertEqual(num3, "5.6 ÷ 6")
+        XCTAssertEqual(num4, "5.6 ÷ 65")
+        XCTAssertEqual(num5, "5.6 ÷ 650")
+        XCTAssertEqual(result, "5.6 ÷ 650 = 0.00861538")
+    }
 }
