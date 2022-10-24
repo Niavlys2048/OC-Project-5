@@ -84,3 +84,6 @@ dev-20221024-14-55:
 - Fixed test 6 result in SimpleCalcUITests
 - Created a last Unit test for percent
 - Included .swiftlint.yml file in git
+
+dev-20221024-15-09:
+- Minor fix in SimpleCalcTests class (by adding // swiftlint:disable type_body_length) to avoid unnecessary warnings

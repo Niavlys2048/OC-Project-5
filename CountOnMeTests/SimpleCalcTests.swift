@@ -9,6 +9,7 @@
 import XCTest
 @testable import CountOnMe
 
+// swiftlint:disable type_body_length
 class SimpleCalcTests: XCTestCase {
     var calc: Calculator!
     
